@@ -10,7 +10,7 @@ jobs:
     steps:
 
     - name: Token
-      env: | 
+      env:  
          token: TTTT
       run: |
         echo "AAAA $token"
@@ -32,7 +32,7 @@ jobs:
         python3 tests/2Dprojections/test1a-LFS-midplane.py out/test1a-LFS-midplane.svg
     
     - name: Upload 
-      env: | 
+      env:  
          token: TTTT
       run: |
         tree
