@@ -9,12 +9,17 @@ jobs:
 
     steps:
 
+    - name: Token
+      env: | 
+         token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "AAAA $token"
+        
     - name: Download
       uses: actions/checkout@v2
     
     - name: Install
       run: |
-        echo ${{ secrets.GITHUB_TOKEN }}
         sudo apt update  -qq
         sudo apt install -qq python-configobj tree
         mkdir -p out
@@ -27,9 +32,11 @@ jobs:
         python3 tests/2Dprojections/test1a-LFS-midplane.py out/test1a-LFS-midplane.svg
     
     - name: Upload 
+      env: | 
+         token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         tree
-        github/uploadOut.perl out/ out/  ${{ secrets.GITHUB_TOKEN }}
+        github/uploadOut.perl out/ out/  $token
         
         
    
