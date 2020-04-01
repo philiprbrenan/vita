@@ -22,7 +22,7 @@ jobs:
     - name: Run
       run: |
         export PYTHONPATH=modules
-        python3 tests/2Dprojections/test1a-LFS-midplane.py
+        python3 tests/2Dprojections/test1a-LFS-midplane.py out/test1a-LFS-midplane.svg
     - name: Upload 
       run: |
         tree
