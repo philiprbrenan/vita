@@ -1,0 +1,23 @@
+# Install python and related modules then run a test
+
+name: Mid plane heat flux
+
+on: [push]
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download
+      uses: actions/checkout@v2
+    - name: Run
+      run: |
+        sudo apt update
+        sudo apt install python-configobj tree
+        tree
+        python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib 
+        export PYTHONPATH=modules
+        python3 tests/2Dprojections/test1a-LFS-midplane.py 
+   
