@@ -1,7 +1,7 @@
-name: Mid plane heat flux   
+name: Mid plane heat flux
 
 on: [push]
-  
+
 jobs:
   build:
 
@@ -10,33 +10,31 @@ jobs:
     steps:
 
     - name: Token
-      env:  
+      env:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         echo "AAAA ${#token}"
-        
+
     - name: Download
       uses: actions/checkout@v2
-    
+
     - name: Install
       run: |
         sudo apt update  -qq
         sudo apt install -qq python-configobj tree
         mkdir -p out
         tree
-        python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib 
-    
+        python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib
+
     - name: Run
       run: |
         export PYTHONPATH=modules
         python3 tests/2Dprojections/test1a-LFS-midplane.py out/test1a-LFS-midplane.svg
-    
-    - name: Upload 
-      env:  
+        python3 tests/2Dprojections/test1b-HFS-midplane.py out/test1b-LFS-midplane.svg
+
+    - name: Upload
+      env:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         tree
         github/uploadOut.perl out/ out/  "$token"
-        
-        
-   
