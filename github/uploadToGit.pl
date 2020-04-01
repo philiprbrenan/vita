@@ -12,7 +12,7 @@ use Data::Table::Text qw(:all);
 my $home = q(/home/phil/vita/minimum);
 
 my @f = searchDirectoryTreesForMatchingFiles($home, qw(.py .pl .perl .yml));
-say STDERR "AAAA ", dump([@f]);
+lll "Files:\n", dump([@f]);
 for my $f(@f)
  {lll qx(git add $f);
  }
