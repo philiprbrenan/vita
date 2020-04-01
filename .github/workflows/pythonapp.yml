@@ -11,6 +11,7 @@ jobs:
 
     steps:
     - name: Run
+      uses: actions/checkout@v2
       run: |
         sudo apt update
         sudo apt install python-configobj tree
