@@ -16,7 +16,7 @@ jobs:
       run: |
         sudo apt update -q
         sudo apt install -q python-configobj tree
-        mkdir out
+        mkdir -p out
         tree
         python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib 
     
