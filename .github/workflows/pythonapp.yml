@@ -2,9 +2,7 @@
 
 name: Mid plane heat flux
 
-on:
-  commit:
-    branches: [ master ]
+on: [commit]
   
 jobs:
   build:
