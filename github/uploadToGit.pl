@@ -19,5 +19,5 @@ for my $f(@f)
 
 my $date = dateTimeStampName;
 
-lll qx(git commit -m "$date");
+lll qx(git commit -m "Vita$date");
 lll qx(git push -u origin master);
