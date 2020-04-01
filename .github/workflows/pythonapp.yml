@@ -9,12 +9,6 @@ jobs:
 
     steps:
 
-    - name: Token
-      env:
-         token: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        echo "AAAA ${#token}"
-
     - name: Download
       uses: actions/checkout@v2
 
