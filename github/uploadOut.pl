@@ -11,7 +11,7 @@ use GitHub::Crud;
 
 my ($source, $target, $token) = map {$_ // ''} @ARGV;
 
-say STDERR "Upload source: $source to: $target.length=", length($token);
+say STDERR "Upload source: $source, to: $target, length:", length($token);
 
 if ($source and $target)                                                        # Upload named folder to GitHub
  {GitHub::Crud::writeFolderUsingSavedToken
