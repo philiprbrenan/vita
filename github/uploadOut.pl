@@ -9,7 +9,11 @@ use warnings FATAL => qw(all);
 use strict;
 use GitHub::Crud;
 
-if (my $dir = $ARGV[1])                                                         # Mirror named folder on GitHub
+my ($source, $target, $token) = map {$_ // ''} @ARGV;
+
+say STDERR "Upload source: $source to: $target";
+
+if ($source and $target)                                                        # Upload named folder to GitHub
  {GitHub::Crud::writeFolderUsingSavedToken
-   (q(philiprbrenan), q(vita), $dir, $dir, $ENV{GITHUB_TOKEN});
+   (q(philiprbrenan), q(vita), $target, $source, $token);
  }
