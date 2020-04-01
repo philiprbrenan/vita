@@ -28,7 +28,7 @@ jobs:
     - name: Upload 
       run: |
         tree
-        github/uploadOut.perl out/
+        github/uploadOut.perl out/ out/ $GITHUB_TOKEN
         
         
    
