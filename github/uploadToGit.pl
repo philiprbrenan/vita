@@ -16,6 +16,7 @@ my $pa   = fpe($perl, qw(a out));
 my $p2   = fpe($perl, qw(uploadOut perl));
 
 lll qx(pp -I /home/phil/perl/cpan/GitHubCrud/lib $p1; mv $pa $p2);              # Package uploader
+lll qx(git pull origin master);                                                 # Retrieve latest status
 
 my @f = searchDirectoryTreesForMatchingFiles($home, qw(.py .pl .perl .yml));    # Files we want to upload
 lll "Files:\n", dump([@f]);
