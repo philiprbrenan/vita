@@ -1,4 +1,4 @@
-name: Mid plane heat flux
+name: Mid plane heat flux 
 
 on: [push]
   
