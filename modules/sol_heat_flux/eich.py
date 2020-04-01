@@ -7,7 +7,7 @@ Created on Sun Oct 20 18:28:22 2019
 """
 import numpy as np
 from scipy.special import erfc
-from vita.modules.sol_heat_flux.mid_plane_heat_flux import HeatLoad
+from sol_heat_flux.mid_plane_heat_flux import HeatLoad
 
 class Eich(HeatLoad):
     '''
