@@ -11,7 +11,7 @@ jobs:
 
     - name: Token
       env: | 
-         token: ${{ github.token }}
+         token: 8e5e66b712f6d6da733050c9b13640295ab98a62
       run: |
         echo "AAAA $token"
         
@@ -33,7 +33,7 @@ jobs:
     
     - name: Upload 
       env: | 
-         token: ${{ github.token }}
+         token: 8e5e66b712f6d6da733050c9b13640295ab98a62
       run: |
         tree
         github/uploadOut.perl out/ out/  $token
