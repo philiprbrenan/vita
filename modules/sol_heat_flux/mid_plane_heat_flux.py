@@ -159,4 +159,4 @@ class HeatLoad():
         plt.xlabel('$s$')
         plt.ylabel('$q(s)$')
         #plt.show()
-        plt.savefig('/home/phil/vita/core/out/1.svg')
+        plt.savefig('out/1.svg')
