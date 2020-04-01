@@ -16,4 +16,5 @@ jobs:
         sudo apt install python-configobj
         python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib 
         export PYTHONPATH=modules
-        python3 tests/test1a-LFS-midplane.py   
+        python3 tests/2Dprojections/test1a-LFS-midplane.py 
+   
