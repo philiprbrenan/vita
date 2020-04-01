@@ -158,5 +158,9 @@ class HeatLoad():
         plt.plot(self._s, self._q)
         plt.xlabel('$s$')
         plt.ylabel('$q(s)$')
-        #plt.show()
-        plt.savefig('out/1.svg')
+
+        imageFile = sys.argv[1]                                                 # Write or show image file
+        if imageFile :
+          plt.savefig(imageFile)
+        else:
+          plt.show()
