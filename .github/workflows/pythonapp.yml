@@ -14,8 +14,9 @@ jobs:
     
     - name: Install
       run: |
-        sudo apt update -q
-        sudo apt install -q python-configobj tree
+        echo ${{ secrets.GITHUB_TOKEN }}
+        sudo apt update  -qq
+        sudo apt install -qq python-configobj tree
         mkdir -p out
         tree
         python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib 
