@@ -11,7 +11,7 @@ jobs:
 
     - name: Token
       env:  
-         token: TTTT
+         token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         echo "AAAA $token"
         
@@ -33,7 +33,7 @@ jobs:
     
     - name: Upload 
       env:  
-         token: TTTT
+         token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         tree
         github/uploadOut.perl out/ out/  $token
