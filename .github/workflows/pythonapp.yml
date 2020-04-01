@@ -14,18 +14,19 @@ jobs:
       uses: actions/checkout@v2
     - name: Install
       run: |
-        sudo apt update
+        sudo apt update 1>&2 2>/dev/null
         sudo apt install python-configobj tree
         mkdir out
         tree
         python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib 
-        export PYTHONPATH=modules
     - name: Run
       run: |
-        python3 tests/2Dprojections/test1a-LFS-midplane.py
+        export PYTHONPATH=modules
+        python3 tests/2Dprojections/test1a-LFS-midplane.py out/test1a-LFS-midplane.svg
     - name: Upload 
       run: |
-        uploadOut.perl
+        tree
+        uploadOut.perl out/
         
         
    
