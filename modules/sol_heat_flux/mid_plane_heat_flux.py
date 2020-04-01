@@ -7,6 +7,7 @@ Created on Mon Oct 21 09:51:09 2019
 import scipy.integrate as integrate
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+import sys
 
 
 class HeatLoad():
@@ -159,7 +160,7 @@ class HeatLoad():
         plt.xlabel('$s$')
         plt.ylabel('$q(s)$')
 
-        imageFile = sys.argv[1]                                                 # Write or show image file
+        imageFile = sys.argv[1] if len(sys.argv) > 1 else None                  # Write or show image file
         if imageFile :
           plt.savefig(imageFile)
         else:
