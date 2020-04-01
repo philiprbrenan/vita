@@ -19,9 +19,9 @@ jobs:
         mkdir out
         tree
         python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib 
-        export PYTHONPATH=modules
     - name: Run
       run: |
+        export PYTHONPATH=modules
         python3 tests/2Dprojections/test1a-LFS-midplane.py
     - name: Upload 
       run: |
