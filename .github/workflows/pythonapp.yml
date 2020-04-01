@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Run
       run: |
-        python3 -m pip install --upgrade pip --user python3-setuptools vtk scipy numpy matplotlib mayavi
+        sudo apt-get update
+        sudo apt-get install python-setuptools
+        python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib mayavi
         export PYTHONPATH=modules
         python3 tests/test1a-LFS-midplane.py   
