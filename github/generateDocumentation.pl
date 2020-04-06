@@ -15,7 +15,7 @@ my $tests   = fpd($home, q(tests));                                             
 my $docs    = fpd($home, q(docs));                                              # Output documentation
 
 makePath($docs);
-clearFolder($docs, 10);
+clearFolder($docs, 99);
 
 my @files = searchDirectoryTreesForMatchingFiles($modules, $tests, qw(.py));    # Modules to document
 my $files = join ' ', @files;

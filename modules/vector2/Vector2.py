@@ -137,8 +137,8 @@ class Vector2(object):
     a = math.acos(c);
     return a if s > 0 else -a
 
-  def fromNormalLineFindSmallestAngleTo(a, b):
-    """The smallest angle the second vector makes with a plane normal to the first vector"""
+  def smallestAngleToNormalPlane(a, b):
+    """The smallest angle between the second vector and a plane normal to the first vector"""
     r = abs(a.angle(b))
     p = math.pi / 2
     return p - r if r < p else r - p
@@ -220,22 +220,22 @@ if __name__ == "__main__":                                                      
   for i in range(-179, +179):                                                   # Anticlockwise angle from x to
     assert(n(x.angle(x * math.cos(dr(i)) + y * math.sin(dr(i)) ), dr(i)))
 
-  assert(n(dr(  0), y.fromNormalLineFindSmallestAngleTo( x)))                   # First vector is y, second vector is 0 degrees anti-clockwise from x axis
-  assert(n(dr(+45), y.fromNormalLineFindSmallestAngleTo( x +  y)))              #   +45
-  assert(n(dr(+90), y.fromNormalLineFindSmallestAngleTo(      y)))              #   +90
-  assert(n(dr(+45), y.fromNormalLineFindSmallestAngleTo(-x + -y)))              #  +135
-  assert(n(dr(  0), y.fromNormalLineFindSmallestAngleTo(-x)))                   #  +180
-  assert(n(dr(+45), y.fromNormalLineFindSmallestAngleTo(-x + -y)))              #  +225
-  assert(n(dr(+90), y.fromNormalLineFindSmallestAngleTo(     -y)))              #  +270
-  assert(n(dr(+45), y.fromNormalLineFindSmallestAngleTo(-x + -y)))              #  +315
-  assert(n(dr(  0), y.fromNormalLineFindSmallestAngleTo( x)))                   #  +360
+  assert(n(dr(  0), y.smallestAngleToNormalPlane( x)))                          # First vector is y, second vector is 0 degrees anti-clockwise from x axis
+  assert(n(dr(+45), y.smallestAngleToNormalPlane( x +  y)))                     #   +45
+  assert(n(dr(+90), y.smallestAngleToNormalPlane(      y)))                     #   +90
+  assert(n(dr(+45), y.smallestAngleToNormalPlane(-x + -y)))                     #  +135
+  assert(n(dr(  0), y.smallestAngleToNormalPlane(-x)))                          #  +180
+  assert(n(dr(+45), y.smallestAngleToNormalPlane(-x + -y)))                     #  +225
+  assert(n(dr(+90), y.smallestAngleToNormalPlane(     -y)))                     #  +270
+  assert(n(dr(+45), y.smallestAngleToNormalPlane(-x + -y)))                     #  +315
+  assert(n(dr(  0), y.smallestAngleToNormalPlane( x)))                          #  +360
 
   p2 = math.pi / 2; p4 = math.pi / 4                                            # Original tests
-  assert(n(y      .fromNormalLineFindSmallestAngleTo( y),     p2))
-  assert(n(y      .fromNormalLineFindSmallestAngleTo( y * 2), p2))
-  assert(n(y      .fromNormalLineFindSmallestAngleTo( x),      0))
-  assert(n(y      .fromNormalLineFindSmallestAngleTo(-x),      0))
-  assert(n((x + y).fromNormalLineFindSmallestAngleTo( x),     p4))
-  assert(n((x - y).fromNormalLineFindSmallestAngleTo( x),     p4))
+  assert(n(y      .smallestAngleToNormalPlane( y),     p2))
+  assert(n(y      .smallestAngleToNormalPlane( y * 2), p2))
+  assert(n(y      .smallestAngleToNormalPlane( x),      0))
+  assert(n(y      .smallestAngleToNormalPlane(-x),      0))
+  assert(n((x + y).smallestAngleToNormalPlane( x),     p4))
+  assert(n((x - y).smallestAngleToNormalPlane( x),     p4))
 
   print("Unit tests successful")
