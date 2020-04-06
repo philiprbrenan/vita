@@ -16,11 +16,13 @@ my $perl = fpd($home, qw(github));                                              
 my $p1   = fpe($perl, qw(uploadOut pl));
 my $pa   = fpe($perl, qw(a out));
 my $p2   = fpe($perl, qw(uploadOut perl));
+my $docx = fpe($perl, qw(generateDocumentation pl));
 
 my $user =  q(philiprbrenan);
 my $repo = qq($user.github.io);
 my $docg = fpd(qw(vita));
 
+lll qx(perl $docx);                                                             # Extract documentation
 
 my @h = qw(.html .css);                                                         # File types we want to upload to web page
 my @t = qw(.py .pl .perl .yml);                                                 # File types we want to upload to vita

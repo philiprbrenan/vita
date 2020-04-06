@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>fiesta_interface.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>fiesta_interface.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Tue Oct 22 09:53:55 2019</p>
+<p>@author: jmbols</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span> <span class="k">as</span> <span class="nn">sio</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Other imports</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">vita.modules.utils</span> <span class="kn">import</span> <span class="n">intersection</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Fiesta</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Class for tracing the magnetic field lines given a FIESTA equlibrium</span>
+
+<span class="sd">    :param str filename: the path to the FIESTA MATLAB save file.</span>
+
+<span class="sd">    :ivar VectorFunction3D b_field: A 3D vector function of the magnetic field.</span>
+
+<span class="sd">    member functions:</span>
+<span class="sd">    &#39;&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_fiesta_model</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Function for getting the magnetic a 3D vector function of the magnetic 
+field</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">b_field</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">vita.modules.cherab</span> <span class="kn">import</span> <span class="n">MagneticField</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;CHERAB integration not installed.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">MagneticField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_vec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_vec</span><span class="p">,</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b_r</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b_z</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b_phi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">read_fiesta_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function for reading the FIESTA equilibrium data from a .mat file</span>
+
+<span class="sd">        input: self, a reference the object itself</span>
+
+<span class="sd">        output: self.r_limiter, a numpy array with the radial coordinates of the vessel limits</span>
+<span class="sd">                self.z_limiter, a numpy array with the vertical coordinates of the vessel limits</span>
+<span class="sd">                self.r_vec,     a numpy array with the radial grid coordinates</span>
+<span class="sd">                self.z_vec,     a numpy array with the vertical grid coordinates</span>
+<span class="sd">                self.psi_n,</span>
+<span class="sd">                self.b_r,       a numpy array with the radial magnetic field component</span>
+<span class="sd">                self.b_z        a numpy array with the vertical field component</span>
+<span class="sd">                self.b_phi,     a numpy array with the toroidal field component</span>
+<span class="sd">                self.b_theta,   a numpy array with the poloidal magnetic field component</span>
+<span class="sd">                self.i_rod      a float with the current in the rod</span>
+<span class="sd">        &#39;&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Read data from .mat file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">mat</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">mat_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">squeeze_me</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Get vessel limits</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">r_limiter</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;R_limits&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_limiter</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;Z_limits&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Get grid data</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">r_vec</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_vec</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Get magnetic data</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;psi&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_n</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;psi_n&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_axis</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;psi_a&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_lcfs</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;psi_b&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mag_axis</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;mag_axis&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_r</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;Br&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_z</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;Bz&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_phi</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;Bphi&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_theta</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;Btheta&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_vac_radius</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;b_vacuum_radius&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_vac</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;b_vacuum_magnitude&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_rod</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;irod&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_points</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;xpoints&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f_profile</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;f_profile&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_profile</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;q_profile&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lcfs_polygon</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;lcfs_polygon&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">get_midplane_lcfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_p</span><span class="o">=</span><span class="mf">1.005</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function for getting the inner and outer radial position of the LCFS at the midplane</span>
+
+<span class="sd">        input: self,  a reference to the object itself</span>
+<span class="sd">               psi_p, the flux surface of the LCFS, standard is psi_p = 1.005 (otherwise the field-line</span>
+<span class="sd">                      is located inside the LCFS)</span>
+
+<span class="sd">        return: Rcross, a list with the outer and inner radial position of the mid-plane LCFS</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">r_vec</span><span class="p">,</span> <span class="n">z_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_vec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_vec</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Get contour</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">cont</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">z_vec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_n</span><span class="p">,</span> <span class="p">[</span><span class="n">psi_p</span><span class="p">])</span>
+        <span class="n">cont</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Loop over the contours</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">c_i</span> <span class="ow">in</span> <span class="n">cont</span><span class="p">:</span>
+            <span class="n">is_core</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">c_i</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="nb">any</span><span class="p">(</span><span class="n">c_i</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_core</span><span class="p">:</span>
+                <span class="n">func1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">c_i</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c_i</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
+                <span class="n">func2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])))</span>
+                <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">r_lcfs</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">intersection</span><span class="p">(</span><span class="n">func1</span><span class="p">,</span> <span class="n">func2</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> <span class="c1"># plt.contour opens a plot, close it</span>
+
+        <span class="k">return</span> <span class="n">r_lcfs</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Function for converting this Fiesta object to a CHERAB equilibrium.</p>
+<p>rtype: EFITEquilibrium</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">to_cherab_equilibrium</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">raysect.core</span> <span class="kn">import</span> <span class="n">Point2D</span>
+            <span class="kn">from</span> <span class="nn">cherab.tools.equilibrium</span> <span class="kn">import</span> <span class="n">EFITEquilibrium</span>
+
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;CHERAB integration not installed.&quot;</span><span class="p">)</span>
+
+        <span class="n">r_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_vec</span>
+        <span class="n">z_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_vec</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">psi_axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_axis</span>
+        <span class="n">psi_lcfs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_lcfs</span>
+        <span class="n">magnetic_axis</span> <span class="o">=</span> <span class="n">Point2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mag_axis</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mag_axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">x_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_points</span><span class="p">:</span>
+            <span class="n">x_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Point2D</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">strike_points</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">f_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_profile</span>
+        <span class="n">q_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_profile</span>
+
+        <span class="n">b_vacuum_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_vac_radius</span>
+        <span class="n">b_vacuum_magnitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_vac</span>
+
+        <span class="n">lcfs_polygon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lcfs_polygon</span>  <span class="c1"># shape 2xM, indexing to remove duplicated point</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">lcfs_polygon</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">lcfs_polygon</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">lcfs_polygon</span> <span class="o">=</span> <span class="n">lcfs_polygon</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">limiter_polygon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">r_limiter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_limiter</span><span class="p">])</span>  <span class="c1"># 2xM</span>
+
+        <span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="n">equilibrium</span> <span class="o">=</span> <span class="n">EFITEquilibrium</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">z_vec</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">psi_axis</span><span class="p">,</span> <span class="n">psi_lcfs</span><span class="p">,</span> <span class="n">magnetic_axis</span><span class="p">,</span> <span class="n">x_points</span><span class="p">,</span> <span class="n">strike_points</span><span class="p">,</span>
+                                      <span class="n">f_profile</span><span class="p">,</span> <span class="n">q_profile</span><span class="p">,</span> <span class="n">b_vacuum_radius</span><span class="p">,</span> <span class="n">b_vacuum_magnitude</span><span class="p">,</span>
+                                      <span class="n">lcfs_polygon</span><span class="p">,</span> <span class="n">limiter_polygon</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">equilibrium</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">vita.utility</span> <span class="kn">import</span> <span class="n">get_resource</span>
+
+    <span class="n">equil</span> <span class="o">=</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;ST40&quot;</span><span class="p">,</span> <span class="s2">&quot;equilibrium&quot;</span><span class="p">,</span> <span class="s2">&quot;limited_eq001_export&quot;</span><span class="p">)</span>
+    <span class="n">FIESTA_EQUIL</span> <span class="o">=</span> <span class="n">Fiesta</span><span class="p">(</span><span class="n">equil</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">FIESTA_EQUIL</span><span class="o">.</span><span class="n">get_midplane_lcfs</span><span class="p">())</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

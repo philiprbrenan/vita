@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test4c-map-fieldlines.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test4c-map-fieldlines.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Fri Mar 20 10:42:34 2020</p>
+<p>@author: jmbols</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">vita.utility</span> <span class="kn">import</span> <span class="n">get_resource</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.field_line</span> <span class="kn">import</span> <span class="n">FieldLine</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.map_field_lines</span> <span class="kn">import</span> <span class="n">map_field_lines</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>FILEPATH = &lsquo;/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat&rsquo;
+FILEPATH = &lsquo;/media/jmbols/Data/jmbols/ST40/Programme 3/Equilibrium/eq_0002.mat&rsquo;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;ST40-IVC1&quot;</span><span class="p">,</span> <span class="s2">&quot;equilibrium&quot;</span><span class="p">,</span> <span class="s2">&quot;eq_006_2T_export&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>HESEL_FILE_PATH = &lsquo;/media/jmbols/Data/jmbols/ST40/Programme 1/n_inner_bnd_scan/ST40.00001.03.h5&rsquo;
+HESEL_FILE_PATH = &lsquo;/media/jmbols/Data/jmbols/ST40/Programme 3/Te(i)_grad_scan/ST40.00003.20.h5&rsquo;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>FILE = h5py.File(HESEL_FILE_PATH, &lsquo;r&rsquo;)
+HESEL_PARAMS = HESELparams(FILE)
+FILE.close()</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">FIELD_LINE</span> <span class="o">=</span> <span class="n">FieldLine</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+    <span class="n">MID_PLANE_LOC</span> <span class="o">=</span> <span class="n">FIELD_LINE</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">get_midplane_lcfs</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">X_AFTER_LCFS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">1e-3</span> <span class="o">+</span> <span class="n">MID_PLANE_LOC</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>I_AFTER_LCFS = np.where(HESEL_PARAMS.xaxis &gt;= 0)[0]
+   X_AFTER_LCFS = HESEL_PARAMS.xaxis[I_AFTER_LCFS] + MID_PLANE_LOC</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">FIELD_LINES</span> <span class="o">=</span> <span class="n">map_field_lines</span><span class="p">(</span><span class="n">X_AFTER_LCFS</span><span class="p">,</span> <span class="n">FILEPATH</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>save_as_pickle(FIELD_LINES, &lsquo;eq_0002&rsquo;)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FIELD_LINE</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">r_limiter</span><span class="p">,</span> <span class="n">FIELD_LINE</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">z_limiter</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">I</span> <span class="ow">in</span> <span class="n">X_AFTER_LCFS</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FIELD_LINES</span><span class="p">[</span><span class="n">I</span><span class="p">][</span><span class="s1">&#39;R&#39;</span><span class="p">],</span> <span class="n">FIELD_LINES</span><span class="p">[</span><span class="n">I</span><span class="p">][</span><span class="s1">&#39;Z&#39;</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FIELD_LINES</span><span class="p">[</span><span class="n">I</span><span class="p">][</span><span class="s1">&#39;Vessel_Intersect&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">FIELD_LINES</span><span class="p">[</span><span class="n">I</span><span class="p">][</span><span class="s1">&#39;Vessel_Intersect&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

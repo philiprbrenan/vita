@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test3c-intersection-outboard.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test3c-intersection-outboard.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Sun Oct 20 18:28:22 2019</p>
+<p>@author: Daniel.Ibanez</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta</span> <span class="kn">import</span> <span class="n">FieldLine</span>
+<span class="kn">from</span> <span class="nn">vita.modules.utils</span> <span class="kn">import</span> <span class="n">intersection</span>
+<span class="kn">from</span> <span class="nn">vita.utility</span> <span class="kn">import</span> <span class="n">get_resource</span>
+
+<span class="n">R200</span> <span class="o">=</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;ST200&quot;</span><span class="p">,</span> <span class="s2">&quot;equilibrium&quot;</span><span class="p">,</span> <span class="s2">&quot;R200&quot;</span><span class="p">)</span>
+<span class="n">field_line</span> <span class="o">=</span> <span class="n">FieldLine</span><span class="p">(</span><span class="n">R200</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">field_line</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">get_midplane_lcfs</span><span class="p">()</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="mf">1.696</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="mf">1.74</span>
+<span class="n">midplane_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span><span class="n">rf</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">lengths</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">midplane_range</span><span class="p">:</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="mi">12</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="n">r0</span><span class="p">)</span><span class="o">*</span><span class="mi">40</span> <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>lengths.append( 10 )</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nb">print</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
+<span class="n">field_line_dict</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+    <span class="n">field_line_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field_line</span><span class="o">.</span><span class="n">follow_field_in_plane</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">lengths</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">break_at_limiter</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>f, ax = plt.subplots(1)
+for i in field_line_dict:
+   ax.plot(i[&lsquo;R&rsquo;],i[&lsquo;Z&rsquo;])
+   ax.plot(i[&lsquo;R&rsquo;],i[&lsquo;Z&rsquo;])
+f.gca().set_aspect(&lsquo;equal&rsquo;, adjustable=&rsquo;box&rsquo;)
+f.gca().set_ylim([-4,0])
+print (len(field_line_dict))</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">field_lines</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">field_line_dict</span><span class="p">:</span>
+    <span class="n">field_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="n">fl</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">],</span> <span class="n">fl</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">]</span> <span class="p">])</span> <span class="p">)</span>
+
+<span class="n">divertor_points</span> <span class="o">=</span> <span class="mi">3</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>divertor_x = np.linspace( 1.9, 2.45,divertor_points)
+divertor_y = np.linspace(-3,-3.6,divertor_points)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">divertor_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">])</span>
+<span class="n">divertor_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.05</span><span class="p">])</span>
+<span class="n">divertor_xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">divertor_x</span><span class="p">,</span> <span class="n">divertor_y</span><span class="p">])</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">intersection</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">divertor_xy</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">field_lines</span><span class="p">]</span>
+<span class="n">x_p</span><span class="p">,</span><span class="n">y_p</span> <span class="o">=</span> <span class="nb">zip</span> <span class="p">(</span><span class="o">*</span><span class="n">result</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">field_line_dict</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">],</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">divertor_x</span><span class="p">,</span><span class="n">divertor_y</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>plt.plot(x_p,y_p,&rsquo;*k&rsquo;)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>plt.gca().set_ylim([-4,-2.5])</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">midplane_range</span><span class="p">)</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">midplane_range</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">fx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">x_p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y_p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> 
+              <span class="p">(</span> <span class="n">midplane_range</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">midplane_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span> <span class="o">*</span>
+              <span class="p">(</span> <span class="n">x_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">midplane_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
+             <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Flux_expansion = &quot;</span><span class="p">,</span> <span class="n">fx</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

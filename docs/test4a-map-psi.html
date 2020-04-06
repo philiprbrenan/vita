@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test4a-map-psi.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test4a-map-psi.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Mon Jan 20 16:37:33 2020</p>
+<p>@author: jmbols</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.fiesta_interface</span> <span class="kn">import</span> <span class="n">Fiesta</span>
+<span class="kn">from</span> <span class="nn">vita.modules.projection2D.map_psi</span> <span class="kn">import</span> <span class="n">map_psi_omp_to_divertor</span>
+<span class="kn">from</span> <span class="nn">vita.utility</span> <span class="kn">import</span> <span class="n">get_resource</span>
+<span class="kn">from</span> <span class="nn">vita.modules.sol_heat_flux.eich</span> <span class="kn">import</span> <span class="n">Eich</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;ST40&quot;</span><span class="p">,</span> <span class="s2">&quot;equilibrium&quot;</span><span class="p">,</span> <span class="s2">&quot;eq002&quot;</span><span class="p">)</span>
+
+    <span class="n">FIESTA</span> <span class="o">=</span> <span class="n">Fiesta</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+
+    <span class="n">MID_PLANE_LOC</span> <span class="o">=</span> <span class="n">FIESTA</span><span class="o">.</span><span class="n">get_midplane_lcfs</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>specify and load heatflux profile</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">FOOTPRINT</span> <span class="o">=</span> <span class="n">Eich</span><span class="p">(</span><span class="mf">0.0025</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">r0_lfs</span><span class="o">=</span><span class="n">MID_PLANE_LOC</span><span class="p">)</span>  <span class="c1"># lambda_q=2.5, S=0.5</span>
+
+    <span class="n">X_OMP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">1e-3</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">X_OMP</span><span class="p">)</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">s_disconnected_dn_max</span> <span class="o">=</span> <span class="mf">2.1</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">fx_in_out</span> <span class="o">=</span> <span class="mf">5.</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">calculate_heat_flux_density</span><span class="p">(</span><span class="s2">&quot;lfs&quot;</span><span class="p">)</span>
+
+    <span class="n">Q_PARALLEL</span> <span class="o">=</span> <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">_q</span>
+    <span class="n">X_AFTER_LCFS</span> <span class="o">=</span> <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">get_global_coordinates</span><span class="p">()</span>
+
+    <span class="n">DIVERTOR_COORDS_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.375</span><span class="p">,</span> <span class="mf">0.675</span><span class="p">])</span>
+    <span class="n">DIVERTOR_COORDS_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.78</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.885</span><span class="p">])</span>
+    <span class="n">DIVERTOR_COORDS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">DIVERTOR_COORDS_X</span><span class="p">,</span> <span class="n">DIVERTOR_COORDS_Y</span><span class="p">])</span>
+    <span class="n">DIVERTOR_MAP</span> <span class="o">=</span> <span class="n">map_psi_omp_to_divertor</span><span class="p">(</span><span class="n">X_AFTER_LCFS</span><span class="p">,</span> <span class="n">FIESTA</span><span class="p">,</span> <span class="n">DIVERTOR_COORDS</span><span class="p">)</span>
+    <span class="n">R_DIV</span> <span class="o">=</span> <span class="n">DIVERTOR_MAP</span><span class="p">[</span><span class="s2">&quot;R_div&quot;</span><span class="p">]</span>
+    <span class="n">Z_DIV</span> <span class="o">=</span> <span class="n">DIVERTOR_MAP</span><span class="p">[</span><span class="s2">&quot;Z_div&quot;</span><span class="p">]</span>
+    <span class="n">ANGLES</span> <span class="o">=</span> <span class="n">DIVERTOR_MAP</span><span class="p">[</span><span class="s2">&quot;Angles&quot;</span><span class="p">]</span>
+    <span class="n">F_X</span> <span class="o">=</span> <span class="n">DIVERTOR_MAP</span><span class="p">[</span><span class="s2">&quot;Flux_expansion&quot;</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">R_DIV</span><span class="p">,</span> <span class="n">ANGLES</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">R_DIV</span><span class="p">,</span> <span class="n">F_X</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">R_DIV</span><span class="p">,</span> <span class="n">Z_DIV</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">R_DIV</span><span class="p">,</span> <span class="n">Q_PARALLEL</span><span class="o">*</span><span class="n">X_AFTER_LCFS</span><span class="o">/</span><span class="p">(</span><span class="n">R_DIV</span><span class="o">*</span><span class="n">F_X</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ANGLES</span><span class="p">)))</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

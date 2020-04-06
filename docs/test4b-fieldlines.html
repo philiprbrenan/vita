@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test4b-fieldlines.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test4b-fieldlines.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Mon Mar 16 10:21:15 2020</p>
+<p>@author: jmbols</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">vita.utility</span> <span class="kn">import</span> <span class="n">get_resource</span>
+<span class="kn">from</span> <span class="nn">vita.modules.projection2D.field_line_projection</span> <span class="kn">import</span> <span class="n">project_heat_flux</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.field_line</span> <span class="kn">import</span> <span class="n">FieldLine</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.fiesta_interface</span> <span class="kn">import</span> <span class="n">Fiesta</span>
+<span class="kn">from</span> <span class="nn">vita.modules.sol_heat_flux.eich</span> <span class="kn">import</span> <span class="n">Eich</span>
+<span class="kn">from</span> <span class="nn">cherab.core.math</span> <span class="kn">import</span> <span class="n">Interpolate2DCubic</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>HESEL_FILE_PATH = &lsquo;/media/jmbols/Data/jmbols/ST40/Programme 3/Te(i)_grad_scan/ST40.00003.20.h5&rsquo;
+HESELDATA = HESELdata(HESEL_FILE_PATH)
+HESELDATA.evaluate_parallel_heat_fluxes()</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;ST40&quot;</span><span class="p">,</span> <span class="s2">&quot;equilibrium&quot;</span><span class="p">,</span> <span class="s2">&quot;eq002&quot;</span><span class="p">)</span>
+
+    <span class="n">FIESTA</span> <span class="o">=</span> <span class="n">Fiesta</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+    <span class="n">B_POL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">FIESTA</span><span class="o">.</span><span class="n">b_r</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">FIESTA</span><span class="o">.</span><span class="n">b_theta</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">FIESTA</span><span class="o">.</span><span class="n">b_z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">B_POL_INTERP</span> <span class="o">=</span> <span class="n">Interpolate2DCubic</span><span class="p">(</span><span class="n">FIESTA</span><span class="o">.</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">FIESTA</span><span class="o">.</span><span class="n">z_vec</span><span class="p">,</span> <span class="n">B_POL</span><span class="p">)</span>
+
+    <span class="n">FIELD_LINE</span> <span class="o">=</span> <span class="n">FieldLine</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+    <span class="n">MID_PLANE_LOC</span> <span class="o">=</span> <span class="n">FIELD_LINE</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">get_midplane_lcfs</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>I_AFTER_LCFS = np.linspace(-1, 10, 100)*1e-3
+I_AFTER_LCFS = np.where(HESELDATA.hesel_params.xaxis &gt;= 0)[0]
+specify and load heatflux profile</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">FOOTPRINT</span> <span class="o">=</span> <span class="n">Eich</span><span class="p">(</span><span class="mf">0.0025</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">r0_lfs</span><span class="o">=</span><span class="n">MID_PLANE_LOC</span><span class="p">)</span>  <span class="c1"># lambda_q=2.5, S=0.5</span>
+
+    <span class="n">X_OMP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">1e-3</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">X_OMP</span><span class="p">)</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">s_disconnected_dn_max</span> <span class="o">=</span> <span class="mf">2.1</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">fx_in_out</span> <span class="o">=</span> <span class="mf">5.</span>
+    <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">calculate_heat_flux_density</span><span class="p">(</span><span class="s2">&quot;lfs&quot;</span><span class="p">)</span>
+
+    <span class="n">Q_PARALLEL</span> <span class="o">=</span> <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">_q</span>
+    <span class="n">X_AFTER_LCFS</span> <span class="o">=</span> <span class="n">FOOTPRINT</span><span class="o">.</span><span class="n">get_global_coordinates</span><span class="p">()</span>
+    <span class="n">EQUILIBRIUM</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X_AFTER_LCFS</span><span class="p">:</span>
+        <span class="n">P_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">FIELD_LINE_DICT</span> <span class="o">=</span> <span class="n">FIELD_LINE</span><span class="o">.</span><span class="n">follow_field_in_plane</span><span class="p">(</span><span class="n">p_0</span><span class="o">=</span><span class="n">P_0</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mf">15.0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FIELD_LINE_DICT</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">],</span> <span class="n">FIELD_LINE_DICT</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">])</span>
+        <span class="n">EQUILIBRIUM</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">FIELD_LINE_DICT</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>X_AFTER_LCFS = HESELDATA.hesel_params.xaxis[I_AFTER_LCFS] + MID_PLANE_LOC</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">DIVERTOR_COORDS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.375</span><span class="p">,</span> <span class="mf">0.675</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.78</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.885</span><span class="p">])))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>EQUILIBRIUM = &lsquo;eq_0002&rsquo;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">HEAT_FLUX_AT_OMP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X_AFTER_LCFS</span><span class="p">,</span> <span class="n">Q_PARALLEL</span><span class="p">))</span>
+    <span class="n">COORDS</span> <span class="o">=</span> <span class="n">project_heat_flux</span><span class="p">(</span><span class="n">HEAT_FLUX_AT_OMP</span><span class="p">,</span> <span class="n">DIVERTOR_COORDS</span><span class="p">,</span> <span class="n">EQUILIBRIUM</span><span class="p">,</span> <span class="n">B_POL_INTERP</span><span class="p">)</span>
+    <span class="n">FIG</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">COORDS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">COORDS</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

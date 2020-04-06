@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>map_field_lines.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>map_field_lines.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Fri Nov  8 11:55:48 2019</p>
+<p>@author: jmbols</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.field_line</span> <span class="kn">import</span> <span class="n">FieldLine</span>
+<span class="kn">from</span> <span class="nn">vita.modules.utils</span> <span class="kn">import</span> <span class="n">intersection</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">map_field_lines</span><span class="p">(</span><span class="n">x_vec_at_omp</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="s1">&#39;diverted&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Function for mapping each field-line to the intersection with the vessel walls</span>
+
+<span class="sd">    Input: x_vec_at_omp,  a numpy array with the radial points at the OMP where</span>
+<span class="sd">                          we want the mapping to start</span>
+<span class="sd">           file_path,     a string with the path to the FIESTA equilibrium .mat file</span>
+<span class="sd">           configuration, a string with either &#39;limited&#39; or &#39;diverted&#39;, where &#39;diverted&#39;</span>
+<span class="sd">                          is the defualt configuration</span>
+
+<span class="sd">    return: field_line_dict, a python dictionary with the radial position from the OMP in m</span>
+<span class="sd">                             as the key and the field-line dictionary with the R, phi</span>
+<span class="sd">                             and Z components along the field line as well as the length, l,</span>
+<span class="sd">                             from the LCFS to the current point along the field-line</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">field_line</span> <span class="o">=</span> <span class="n">FieldLine</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">field_line_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x_vec_at_omp</span><span class="p">:</span>
+        <span class="n">field_lines</span> <span class="o">=</span> <span class="n">field_line</span><span class="o">.</span><span class="n">follow_field_in_plane</span><span class="p">(</span><span class="n">p_0</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">max_length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+
+        <span class="n">func1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">],</span> <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]])</span>
+        <span class="n">func2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">field_line</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">r_limiter</span><span class="p">,</span> <span class="n">field_line</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">z_limiter</span><span class="p">])</span>
+
+        <span class="p">(</span><span class="n">i_intersect_func1</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span>\
+        <span class="p">(</span><span class="n">r_intersect</span><span class="p">,</span> <span class="n">z_intersect</span><span class="p">)</span> <span class="o">=</span> <span class="n">intersection</span><span class="p">(</span><span class="n">func1</span><span class="p">,</span> <span class="n">func2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">r_intersect</span><span class="p">)):</span>
+            <span class="n">i_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">i_intersect_func1</span><span class="p">))</span>
+            <span class="n">i_first_intersect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">][</span><span class="n">i_int</span><span class="p">])</span>
+            <span class="n">i_intersection</span> <span class="o">=</span> <span class="n">i_intersect_func1</span><span class="p">[</span><span class="n">i_first_intersect</span><span class="p">]</span>
+            <span class="n">i_intersection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">i_intersection</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">configuration</span> <span class="o">==</span> <span class="s1">&#39;limited&#39;</span><span class="p">:</span>
+                <span class="n">i_min_intersect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">][</span><span class="n">i_intersection</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_intersect</span><span class="p">)</span>
+                <span class="n">i_intersection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">][:]</span> <span class="o">&lt;</span> <span class="n">r_intersect</span><span class="p">[</span><span class="n">i_min_intersect</span><span class="p">])[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">configuration</span> <span class="o">==</span> <span class="s1">&#39;diverted&#39;</span><span class="p">:</span>
+                <span class="n">i_min_intersect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">][</span><span class="n">i_intersection</span><span class="p">]</span> <span class="o">-</span> <span class="n">z_intersect</span><span class="p">)</span>
+                <span class="n">i_intersection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">][:]</span> <span class="o">&lt;</span> <span class="n">z_intersect</span><span class="p">[</span><span class="n">i_min_intersect</span><span class="p">])[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Error: unknown configuration.</span><span class="se">\</span>
+<span class="s2">                                          Please use either &#39;limited&#39; or &#39;diverted&#39;&quot;</span><span class="p">)</span>
+
+            <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">][:</span><span class="n">i_intersection</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">][:</span><span class="n">i_intersection</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">][:</span><span class="n">i_intersection</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;Vessel_Intersect&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_intersect</span><span class="p">[</span><span class="n">i_min_intersect</span><span class="p">],</span>
+                                               <span class="n">z_intersect</span><span class="p">[</span><span class="n">i_min_intersect</span><span class="p">])</span>
+
+            <span class="n">field_line_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_lines</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">field_lines</span><span class="p">[</span><span class="s2">&quot;Vessel_Intersect&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">field_line_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_lines</span>
+
+    <span class="k">return</span> <span class="n">field_line_dict</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test4d-particle-tracing.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test4d-particle-tracing.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Mon Mar 23 09:04:48 2020</p>
+<p>@author: jmbols</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.constants</span> <span class="kn">import</span> <span class="n">m_p</span><span class="p">,</span> <span class="n">m_n</span><span class="p">,</span> <span class="n">e</span>
+<span class="kn">from</span> <span class="nn">vita.utility</span> <span class="kn">import</span> <span class="n">get_resource</span>
+<span class="kn">from</span> <span class="nn">vita.modules.projection2D.particle_path_projection</span> <span class="kn">import</span> <span class="n">ParticlePath</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.fiesta_interface</span> <span class="kn">import</span> <span class="n">Fiesta</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;ST40-IVC1&quot;</span><span class="p">,</span> <span class="s2">&quot;equilibrium&quot;</span><span class="p">,</span> <span class="s2">&quot;eq_006_2T_export&quot;</span><span class="p">)</span>
+    <span class="n">FIESTA</span> <span class="o">=</span> <span class="n">Fiesta</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>DATA = sio.loadmat(FILEPATH)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">PARTICLE_MASS</span> <span class="o">=</span> <span class="n">m_n</span> <span class="o">+</span> <span class="n">m_p</span>
+
+    <span class="n">ZE_M</span> <span class="o">=</span> <span class="n">e</span> <span class="o">/</span> <span class="n">PARTICLE_MASS</span>
+
+    <span class="n">PATH_OBJ</span> <span class="o">=</span> <span class="n">ParticlePath</span><span class="p">(</span><span class="n">ZE_M</span><span class="p">,</span> <span class="n">FIESTA</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">e</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>%%</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">INITIAL_POS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.728</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">B_HERE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">PATH_OBJ</span><span class="o">.</span><span class="n">interp_b_r</span><span class="p">(</span><span class="n">INITIAL_POS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">INITIAL_POS</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+                       <span class="nb">float</span><span class="p">(</span><span class="n">PATH_OBJ</span><span class="o">.</span><span class="n">exact_b_phi</span><span class="p">(</span><span class="n">INITIAL_POS</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                       <span class="nb">float</span><span class="p">(</span><span class="n">PATH_OBJ</span><span class="o">.</span><span class="n">interp_b_z</span><span class="p">(</span><span class="n">INITIAL_POS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">INITIAL_POS</span><span class="p">[</span><span class="mi">2</span><span class="p">]))])</span>
+
+    <span class="n">B_MAG</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">B_HERE</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">B_DIR</span> <span class="o">=</span> <span class="n">B_HERE</span> <span class="o">/</span> <span class="n">B_MAG</span>
+
+    <span class="n">V_PARA_0</span> <span class="o">=</span> <span class="mf">5e5</span>
+
+    <span class="n">MAG_MO_0</span> <span class="o">=</span> <span class="mf">1e-15</span>
+
+    <span class="n">INITIAL_VEC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">INITIAL_POS</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">V_PARA_0</span><span class="p">,</span> <span class="n">MAG_MO_0</span><span class="p">])])</span>
+
+    <span class="n">OUT</span> <span class="o">=</span> <span class="n">PATH_OBJ</span><span class="o">.</span><span class="n">follow_path</span><span class="p">(</span><span class="n">INITIAL_VEC</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>%%</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;r_tot&#39;</span><span class="p">],</span> <span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;z_tot&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FIESTA</span><span class="o">.</span><span class="n">r_limiter</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">FIESTA</span><span class="o">.</span><span class="n">z_limiter</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FIESTA</span><span class="o">.</span><span class="n">lcfs_polygon</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">FIESTA</span><span class="o">.</span><span class="n">lcfs_polygon</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;v_para&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;vpara&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;v_perp&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;vperp&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Magnetic moment&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;v_para&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">OUT</span><span class="p">[</span><span class="s1">&#39;v_perp&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Kinetic Energy&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>plt.figure()
+plt.plot(OUT[&lsquo;r_lorentz&rsquo;], OUT[&lsquo;z_lorentz&rsquo;])
+plt.show()</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

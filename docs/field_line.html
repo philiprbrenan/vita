@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>field_line.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>field_line.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Wed Oct 30 15:38:46 2019</p>
+<p>@author: jmbols</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp2d</span>
+<span class="kn">from</span> <span class="nn">scipy.constants</span> <span class="kn">import</span> <span class="n">mu_0</span> <span class="k">as</span> <span class="n">mu0</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">vita.utility</span> <span class="kn">import</span> <span class="n">get_resource</span>
+<span class="kn">from</span> <span class="nn">vita.modules.fiesta.fiesta_interface</span> <span class="kn">import</span> <span class="n">Fiesta</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">FieldLine</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Class for following a magnetic field line given a Fiesta equilibrium.</span>
+
+<span class="sd">    Member functions:</span>
+<span class="sd">        follow_field_in_plane(p_0, max_length, max_points, rtol)</span>
+<span class="sd">    &#39;&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span> <span class="o">=</span> <span class="n">Fiesta</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">follow_field_in_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_0</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">max_points</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">2e-10</span><span class="p">,</span>
+                              <span class="n">break_at_limiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function following the magnetic field-lines given a starting point</span>
+
+<span class="sd">        solves the set of coupled ODEs:</span>
+
+<span class="sd">            d/dl R   = B_r / (|B|)</span>
+<span class="sd">            d/dl phi = B_phi / (R |B|)</span>
+<span class="sd">            d/dl Z   = B_z / (|B|),</span>
+
+<span class="sd">        where B_r, B_phi, B_z are the cylindrical components of the magnetic field, |B| is the</span>
+<span class="sd">        magnitude of the magnetic field, R, phi and Z are the cylindrical</span>
+<span class="sd">        positions of the field line</span>
+<span class="sd">        and l is the length along the magnetic field line</span>
+
+<span class="sd">        input: self,        the object parameters</span>
+<span class="sd">               p_0,         a tuple with the initial position of the field-line to be tracked</span>
+<span class="sd">               maxl_length, a float with the maximum length of the field lines used for</span>
+<span class="sd">                            solving the set of ODE&#39;s</span>
+<span class="sd">               max_points,  an integer with the maximum number of radial points</span>
+<span class="sd">                            used when solving the ODE</span>
+<span class="sd">               rtol,             a float with the maximum relative error tolerance</span>
+<span class="sd">               break_at_limiter, a boolean with true if you don&#39;t want the ODE solver</span>
+<span class="sd">                                 to continue after the field line intersects the vessel limits</span>
+
+<span class="sd">        return: field_line, a dictionary with the R, phi and Z components along the field line</span>
+<span class="sd">        &#39;&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">def</span> <span class="nf">dx_dl</span><span class="p">(</span><span class="n">_l_dist</span><span class="p">,</span> <span class="n">x_vec</span><span class="p">):</span>
+            <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            The function describing the ode to solve in order to track the magnetic field lines</span>
+
+<span class="sd">            input: l_dist, np.array with the distance along the magnetic field-line</span>
+<span class="sd">                   x_vec,  vector with the R, phi and Z initial positions</span>
+
+<span class="sd">            return: dx_dl_rhs, the right-hand side of the ode to solve</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+            <span class="n">r_init</span> <span class="o">=</span> <span class="n">x_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">z_init</span> <span class="o">=</span> <span class="n">x_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="n">br_interp</span> <span class="o">=</span> <span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">r_vec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">z_vec</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">b_r</span><span class="p">)</span>
+            <span class="n">bz_interp</span> <span class="o">=</span> <span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">r_vec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">z_vec</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">b_z</span><span class="p">)</span>
+            <span class="n">br_init</span> <span class="o">=</span> <span class="n">br_interp</span><span class="p">(</span><span class="n">r_init</span><span class="p">,</span> <span class="n">z_init</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">br_interp</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">bz_init</span> <span class="o">=</span> <span class="n">bz_interp</span><span class="p">(</span><span class="n">r_init</span><span class="p">,</span> <span class="n">z_init</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">bz_interp</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">bphi_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">i_rod</span><span class="o">*</span><span class="n">mu0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r_init</span><span class="p">)</span>
+
+            <span class="n">b_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">br_init</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">bphi_init</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">bz_init</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">dx_dl_rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">dx_dl_rhs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">br_init</span> <span class="o">/</span> <span class="n">b_mag</span>
+            <span class="n">dx_dl_rhs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bphi_init</span> <span class="o">/</span> <span class="p">(</span><span class="n">r_init</span> <span class="o">*</span> <span class="n">b_mag</span><span class="p">)</span>
+            <span class="n">dx_dl_rhs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">bz_init</span> <span class="o">/</span> <span class="n">b_mag</span>
+
+            <span class="k">return</span> <span class="n">dx_dl_rhs</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>We don&rsquo;t want to find min and max at each solve_ivp timestep and
+we want to be able to calculate the exact point of intersection hence
+the addition or subtraction of 0.00025 (no intersection occurs if we
+terminate the evaluation at the point of intersection)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">displacement</span> <span class="o">=</span> <span class="mf">0.00025</span>
+        <span class="n">inner_wall</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">r_limiter</span><span class="p">)</span> <span class="o">-</span> <span class="n">displacement</span>
+        <span class="n">lower_wall</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">z_limiter</span><span class="p">)</span> <span class="o">-</span> <span class="n">displacement</span>
+        <span class="n">outer_wall</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">r_limiter</span><span class="p">)</span> <span class="o">+</span> <span class="n">displacement</span>
+        <span class="n">upper_wall</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fiesta_equil</span><span class="o">.</span><span class="n">z_limiter</span><span class="p">)</span> <span class="o">+</span> <span class="n">displacement</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">def</span> <span class="nf">event</span><span class="p">(</span><span class="n">_l_dist</span><span class="p">,</span> <span class="n">x_vec</span><span class="p">):</span>
+            <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Function for determining whether the solution to the ODE passes a wall,</span>
+<span class="sd">            which terminates the ODE solver</span>
+
+<span class="sd">            input: l_dist, np.array with the distance along the magnetic field-line</span>
+<span class="sd">                   x_vec,  vector with the R, phi and Z initial positions</span>
+
+<span class="sd">            return: intersect_wall, returns 0 if any wall surface is intersected,</span>
+<span class="sd">                                    otherwise returns a float (the event function of</span>
+<span class="sd">                                    solve_ivp only looks for events = 0)</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+            <span class="n">intersect_wall</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">inner_wall</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">lower_wall</span><span class="p">)</span>\
+                             <span class="o">*</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">outer_wall</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">upper_wall</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">intersect_wall</span>
+        <span class="k">if</span> <span class="n">break_at_limiter</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">dist_along_fieldline</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">max_points</span><span class="p">)</span>
+
+        <span class="n">ivp_solution</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">dx_dl</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="nb">tuple</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_length</span><span class="p">]),</span>
+                                 <span class="n">y0</span><span class="o">=</span><span class="n">p_0</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">dist_along_fieldline</span><span class="p">,</span>
+                                 <span class="n">events</span><span class="o">=</span><span class="n">event</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="n">rtol</span><span class="p">)</span>
+
+        <span class="n">field_line</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">field_line</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ivp_solution</span><span class="o">.</span><span class="n">t</span><span class="p">[:])</span>
+        <span class="n">field_line</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ivp_solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">field_line</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ivp_solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">field_line</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ivp_solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">return</span> <span class="n">field_line</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;ST40-IVC1&quot;</span><span class="p">,</span> <span class="s2">&quot;equilibrium&quot;</span><span class="p">,</span> <span class="s2">&quot;eq_010_export&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>FILEPATH = &lsquo;/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat&rsquo;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">FIELD_LINE</span> <span class="o">=</span> <span class="n">FieldLine</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>print(FIELD_LINE.fiesta_equil.r_vec)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">LCFS_INDEX</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.77</span><span class="p">,</span> <span class="mf">0.7772</span><span class="p">,</span> <span class="mf">0.79</span><span class="p">]</span>
+    <span class="n">FIELD_LINE_DICTS</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">LCFS_INDEX</span><span class="p">:</span>
+        <span class="n">P_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">FIELD_LINE_DICT</span> <span class="o">=</span> <span class="n">FIELD_LINE</span><span class="o">.</span><span class="n">follow_field_in_plane</span><span class="p">(</span><span class="n">p_0</span><span class="o">=</span><span class="n">P_0</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mf">25.0</span><span class="p">)</span>
+        <span class="n">FIELD_LINE_DICTS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">FIELD_LINE_DICT</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FIELD_LINE_DICT</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">],</span> <span class="n">FIELD_LINE_DICT</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">])</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
