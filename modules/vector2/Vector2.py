@@ -138,7 +138,7 @@ class Vector2(object):
     return a if s > 0 else -a
 
   def fromNormalLineFindSmallestAngleTo(a, b):
-    """The smallest angle the second vector makes with a line normal to the first vector"""
+    """The smallest angle the second vector makes with a plane normal to the first vector"""
     r = abs(a.angle(b))
     p = math.pi / 2
     return p - r if r < p else r - p

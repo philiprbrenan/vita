@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>eich.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>eich.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <h1>Module that creates a heat load model based on the Eich parameters</h1>
+<p>Created on Sun Oct 20 18:28:22 2019
+@author: Daniel.Iglesias@tokamak.energy.co.uk</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">erfc</span>
+<span class="kn">from</span> <span class="nn">sol_heat_flux.mid_plane_heat_flux</span> <span class="kn">import</span> <span class="n">HeatLoad</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Class for evaluating and storing the heat load at the up-stream and down-stream
+positions using an Eich-like single exponential fit.</p>
+<p>Member functions:</p>
+<pre><code>calculate_heat_flux_density: Function for calculating the heat-flux given
+a set of input parameters.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Eich</span><span class="p">(</span><span class="n">HeatLoad</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Inputs for the class are</p>
+<h2>Parameters</h2>
+<p>lambda_q : float, optional
+    The scrape-off layer power fall-off length. The default is 0.0015 m.
+S : float, optional
+    Spreading factor. The default is 0.
+r0_lfs : float, optional
+    The position of the low field side LCFS. The default is 0.
+r0_hfs : float, optional
+    The position of the high field side LCFS. The default is 0.</p>
+<h2>Returns</h2>
+<p>None.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lambda_q</span><span class="o">=</span><span class="mf">1.5e-3</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">r0_lfs</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">r0_hfs</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">HeatLoad</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r0_lfs</span><span class="p">,</span> <span class="n">r0_hfs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_q</span> <span class="o">=</span> <span class="n">lambda_q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">=</span> <span class="n">S</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_0</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;Eich&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Function for evaluating the heat flux density using an Eich-like
+exponential at the mid-plane and an Eich function at the divertor.</p>
+<p>The heat flux for the different positions is given by:</p>
+<pre><code>lfs-mp:
+    lambda_q = q_0*exp[-s/lambda_q] for s &gt; 0
+
+hfs-mp:
+    lambda_q = q_0*exp[-s/lambda_q]/f_x_in_out*r0_lfs/r0_hfs
+                                    for s &gt; 0 and s &lt; d_rsep
+    lambda_q = 0                    for s &gt; d_rsep
+
+lfs:
+    lambda_q = q_0/2*exp[S^2/(2*lambda_q*f_x)^2 - s/(lambda_q*f_x)]
+                    *erfc(S/(2*lambda_q*f_x) - s/S)
+hfs:
+    So far, this has not been implemented properly, so it simply
+    gives the same output as hfs-mp
+</code></pre>
+<h2>Parameters</h2>
+<p>where : string, optional
+    A string with the position to evaluate.
+    The options are:
+        &ldquo;lfs-mp&rdquo;
+        &ldquo;hfs-mp&rdquo;
+        &ldquo;lfs&rdquo;
+        &ldquo;hfs&rdquo;
+    The default is &ldquo;lfs-mp&rdquo;.</p>
+<h2>Returns</h2>
+<p>None.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">calculate_heat_flux_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">&quot;lfs-mp&quot;</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s_disconnected_dn_inboard</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_x_in_out</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">s_disconnected_dn_max</span>
+
+        <span class="k">if</span> <span class="n">where</span> <span class="o">==</span> <span class="s2">&quot;lfs-mp&quot;</span><span class="p">:</span>
+            <span class="n">i_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="p">[</span><span class="n">i_cut</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i_cut</span><span class="p">]</span>\
+                                                        <span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_q</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">where</span> <span class="o">==</span> <span class="s2">&quot;hfs-mp&quot;</span><span class="p">:</span>
+            <span class="n">i_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s_disconnected_dn_inboard</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">))</span>
+            <span class="n">profile</span><span class="p">[</span><span class="n">i_cut</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i_cut</span><span class="p">]</span>\
+                                             <span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_q</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">f_x_in_out</span><span class="p">))</span>\
+                                             <span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">f_x_in_out</span>\
+                                             <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">r0_lfs</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">r0_hfs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="n">profile</span>
+
+        <span class="k">elif</span> <span class="n">where</span> <span class="o">==</span> <span class="s2">&quot;hfs&quot;</span><span class="p">:</span>
+            <span class="n">i_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s_disconnected_dn_inboard</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">))</span>
+            <span class="n">profile</span><span class="p">[</span><span class="n">i_cut</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i_cut</span><span class="p">]</span>\
+                                             <span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_q</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">f_x_in_out</span><span class="p">))</span>\
+                                             <span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">f_x_in_out</span>\
+                                             <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">r0_lfs</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">r0_hfs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="n">profile</span>
+
+        <span class="k">elif</span> <span class="n">where</span> <span class="o">==</span> <span class="s2">&quot;lfs&quot;</span><span class="p">:</span>
+            <span class="n">a_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_q</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_0</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a_temp</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span>\
+                                                  <span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_q</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">f_x</span><span class="p">))</span>\
+                                <span class="o">*</span><span class="n">erfc</span><span class="p">(</span><span class="n">a_temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">error_string</span> <span class="o">=</span> <span class="s2">&quot;calculate_heat_flux_density for&quot;</span>
+            <span class="n">error_string</span> <span class="o">+=</span> <span class="s2">&quot; the </span><span class="si">{}</span><span class="s2"> is not yet implemented.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">where</span><span class="p">)</span>
+            <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">error_string</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
