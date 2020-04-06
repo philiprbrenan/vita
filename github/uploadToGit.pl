@@ -11,7 +11,7 @@ use Data::Table::Text qw(:all);
 use GitHub::Crud;
 
 my $home = q(/home/phil/vita/minimum);                                          # Home folder
-my $doc  = fpd($home, qw(doc));                                                 # Documentation
+my $docs = fpd($home, qw(docs));                                                # Documentation
 my $perl = fpd($home, qw(github));                                              # Perl to perform upload to github
 my $p1   = fpe($perl, qw(uploadOut pl));
 my $pa   = fpe($perl, qw(a out));
@@ -44,9 +44,9 @@ if (1)                                                                          
  }
 
 if (1)                                                                          # Upload documentation
- {my @f = searchDirectoryTreesForMatchingFiles($doc, @h);                       # Files we want to upload
+ {my @f = searchDirectoryTreesForMatchingFiles($docs, @h);                      # Files we want to upload
   for my $s(@f)
-   {my $t = swapFilePrefix($s, $doc, $docg);
+   {my $t = swapFilePrefix($s, $docs, $docg);
     lll $t;
     GitHub::Crud::writeFileFromFileUsingSavedToken($user, $repo, $t, $s);
    }
