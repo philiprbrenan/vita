@@ -10,7 +10,7 @@ from scipy.special import erfc
 from sol_heat_flux.mid_plane_heat_flux import HeatLoad
 
 class Eich(HeatLoad):
-    '''
+    """
     Class for evaluating and storing the heat load at the up-stream and down-stream
     positions using an Eich-like single exponential fit.
 
@@ -18,9 +18,9 @@ class Eich(HeatLoad):
 
         calculate_heat_flux_density: Function for calculating the heat-flux given
         a set of input parameters.
-    '''
+    """
     def __init__(self, lambda_q=1.5e-3, S=0., r0_lfs=0., r0_hfs=0.):
-        '''
+        """
         Inputs for the class are
 
         Parameters
@@ -38,7 +38,7 @@ class Eich(HeatLoad):
         -------
         None.
 
-        '''
+        """
         HeatLoad.__init__(self, r0_lfs, r0_hfs)
         self.lambda_q = lambda_q
         self.S = S
@@ -46,7 +46,7 @@ class Eich(HeatLoad):
         self.model_type = "Eich"
 
     def calculate_heat_flux_density(self, where="lfs-mp"):
-        '''
+        """
         Function for evaluating the heat flux density using an Eich-like
         exponential at the mid-plane and an Eich function at the divertor.
 
@@ -82,7 +82,7 @@ class Eich(HeatLoad):
         -------
         None.
 
-        '''
+        """
         self._q = np.zeros(len(self._s))
         self._s_disconnected_dn_inboard = self.f_x_in_out*self.s_disconnected_dn_max
 

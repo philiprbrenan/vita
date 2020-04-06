@@ -4,6 +4,7 @@
 Created on Sun Oct 20 18:28:22 2019
 
 @author: Daniel.Ibanez
+
 """
 from sol_heat_flux.eich import Eich
 import numpy as np

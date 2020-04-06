@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>Vector2.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>Vector2.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">math</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <h1><span id="vectors-in-2-dimensional-euclidean-space" href="vectors-in-2-dimensional-euclidean-space">Vectors in 2 dimensional euclidean space</span></h1>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Vector2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Create a vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>String representation of a vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s1">)&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Rotate a copy of a vector by 180 degrees</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__neg__</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">r180</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Length of a vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__abs__</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">length</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Whether two vectors are equal within a radius of floating point epsilon</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Vector2</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Add the second vector to the first vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Add the second vector to a copy of the first vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Subtract the second vector from the first vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__isub__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Subtract the second vector from a copy of the first vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Multiply a vector by a scalar</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">scalar</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">*=</span> <span class="n">scalar</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">*=</span> <span class="n">scalar</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>Multiply a copy of vector by a scalar</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">scalar</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">scalar</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">scalar</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Divide a vector by a scalar</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__itruediv__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">scalar</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">/=</span> <span class="n">scalar</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">/=</span> <span class="n">scalar</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>Divide a copy of a vector by a scalar</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="fm">__truediv__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">scalar</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">scalar</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="n">scalar</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>Create the useful vectors: zero=(0,0), x=(1,0), y=(0,1)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">zeroAndUnits</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Vector2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>Clone a vector to allow it to be modified by other operations</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>Two numbers are equal if they are less than this far apart</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">closeRadius</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="mf">1e-10</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      <p>Whether two numbers are close</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">delta</span> <span class="o">=</span> <span class="n">Vector2</span><span class="o">.</span><span class="n">closeRadius</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">-</span> <span class="n">delta</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="o">+</span> <span class="n">delta</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>Whether a number is non zero</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">nonZero</span><span class="p">(</span><span class="n">n</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="ow">not</span> <span class="n">Vector2</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Length of a vector.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>Length squared of a vector.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">length2</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <p>Distance between the points identified by two vectors when placed on the same point.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-45'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-45'>#</a>
+      </div>
+      <p>Distance squared between the points identified by two vectors when placed on the same point.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">distance2</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-46'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>Normalize a vector.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">l</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">length</span><span class="p">()</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">Vector2</span><span class="o">.</span><span class="n">nonZero</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">this</span> <span class="o">/</span> <span class="n">l</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
+      </div>
+      <p>Normalize a copy of vector.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">Normalize</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-50'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">l</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">length</span><span class="p">()</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">Vector2</span><span class="o">.</span><span class="n">nonZero</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="o">/</span> <span class="n">l</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      <p>Dot product of two vectors.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-53'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-53'>#</a>
+      </div>
+      <p>Signed area of the parallelogram defined by the two vectors. The area is negative if the second vector appears to the right of the first if they are both placed at the origin and the observer stands against the z-axis in a left handed coordinate system.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-54'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-54'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-55'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-55'>#</a>
+      </div>
+      <p>cos(angle between two vectors).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">cos</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-56'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-56'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">/</span> <span class="n">this</span><span class="o">.</span><span class="n">length</span><span class="p">()</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">length</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-57'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <p>sin(angle between two vectors).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-58'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-58'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">area</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">/</span> <span class="n">this</span><span class="o">.</span><span class="n">length</span><span class="p">()</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">length</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-59'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-59'>#</a>
+      </div>
+      <p>Angle in radians anticlockwise that the first vector must be rotated to point along the second vector normalized to the range: -pi to +pi.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-60'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-60'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">c</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="n">a</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-61'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-61'>#</a>
+      </div>
+      <p>The smallest angle the second vector makes with a line normal to the first vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-62'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-62'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">r</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">p</span> <span class="o">-</span> <span class="n">r</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">p</span> <span class="k">else</span> <span class="n">r</span> <span class="o">-</span> <span class="n">p</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-63'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-63'>#</a>
+      </div>
+      <p>Rotate a vector by 90 degrees anticlockwise.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">r90</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-64'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-64'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">x</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-65'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-65'>#</a>
+      </div>
+      <p>Rotate a copy of a vector by 90 degrees anticlockwise.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">R90</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-66'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-66'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-67'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-67'>#</a>
+      </div>
+      <p>Rotate a vector by 180 degrees.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">r180</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-68'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-68'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">y</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-69'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-69'>#</a>
+      </div>
+      <p>Rotate  a copy of a vector by 180 degrees.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">R180</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-70'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-70'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-71'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-71'>#</a>
+      </div>
+      <p>Rotate a copy of a vector by 270 degrees anticlockwise.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">r270</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-72'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-72'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">x</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-73'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-73'>#</a>
+      </div>
+      <p>Rotate a vector by 270 degrees anticlockwise.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">R270</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-74'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-74'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-75'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-75'>#</a>
+      </div>
+      <p>Swap the components of a vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-76'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-76'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">x</span>
+    <span class="k">return</span> <span class="n">this</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-77'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-77'>#</a>
+      </div>
+      <p>Swap the components of a copy of a vector</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">Swap</span><span class="p">(</span><span class="n">this</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-78'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-78'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>                                                      <span class="c1"># Unit tests</span>
+  <span class="n">zero</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Vector2</span><span class="o">.</span><span class="n">zeroAndUnits</span><span class="p">()</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="n">Vector2</span><span class="o">.</span><span class="n">close</span>
+  <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">n</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span>    <span class="n">n</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="mf">1e-100</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>       <span class="o">==</span> <span class="s1">&#39;Vector2(1, 2)&#39;</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span>             <span class="o">==</span>  <span class="n">Vector2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+  <span class="k">assert</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span>                 <span class="o">!=</span>  <span class="n">Vector2</span><span class="p">(</span> <span class="mi">1</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span>     <span class="o">==</span>  <span class="n">x</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">==</span>  <span class="n">x</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>       <span class="o">==</span>  <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>   <span class="o">==</span>  <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+
+  <span class="n">h</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">4</span>                                                             <span class="c1"># Hypotenuse</span>
+  <span class="k">assert</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>                <span class="o">==</span>   <span class="mi">5</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">length</span><span class="p">()</span>            <span class="o">==</span>   <span class="mi">5</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">length2</span><span class="p">()</span>           <span class="o">==</span>  <span class="mi">25</span><span class="p">)</span>
+
+  <span class="k">assert</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">distance</span> <span class="p">(</span><span class="o">-</span><span class="n">h</span><span class="p">)</span>       <span class="o">==</span>  <span class="mi">10</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">distance2</span><span class="p">(</span><span class="o">-</span><span class="n">h</span><span class="p">)</span>       <span class="o">==</span> <span class="mi">100</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">Normalize</span><span class="p">()</span>         <span class="o">==</span> <span class="n">x</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span>                                       <span class="c1">#Tdot</span>
+  <span class="k">assert</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">area</span><span class="p">(</span><span class="o">-</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>  <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>                                            <span class="c1">#Tarea</span>
+
+  <span class="n">r2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="n">r3</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="n">yr3</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="n">r3</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>  <span class="mi">1</span> <span class="o">/</span> <span class="n">r2</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span> <span class="n">x</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">yr3</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>  <span class="mi">1</span>  <span class="o">/</span> <span class="n">r2</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span> <span class="n">x</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">yr3</span><span class="p">),</span> <span class="n">r3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+
+  <span class="k">assert</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">R90</span><span class="p">()</span>  <span class="o">==</span>   <span class="n">y</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">R180</span><span class="p">()</span> <span class="o">==</span>  <span class="o">-</span><span class="n">x</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">R270</span><span class="p">()</span> <span class="o">==</span>  <span class="o">-</span><span class="n">y</span><span class="p">)</span>
+  <span class="k">assert</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">swap</span><span class="p">()</span> <span class="o">==</span>  <span class="n">y</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+  <span class="n">dr</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span>
+
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">179</span><span class="p">,</span> <span class="o">+</span><span class="mi">179</span><span class="p">):</span>                                                   <span class="c1"># Anticlockwise angle from x to</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="p">),</span> <span class="n">dr</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span>  <span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">x</span><span class="p">)))</span>                   <span class="c1"># First vector is y, second vector is 0 degrees anti-clockwise from x axis</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="o">+</span><span class="mi">45</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">x</span> <span class="o">+</span>  <span class="n">y</span><span class="p">)))</span>              <span class="c1">#   +45</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="o">+</span><span class="mi">90</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span>      <span class="n">y</span><span class="p">)))</span>              <span class="c1">#   +90</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="o">+</span><span class="mi">45</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span><span class="o">-</span><span class="n">x</span> <span class="o">+</span> <span class="o">-</span><span class="n">y</span><span class="p">)))</span>              <span class="c1">#  +135</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span>  <span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)))</span>                   <span class="c1">#  +180</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="o">+</span><span class="mi">45</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span><span class="o">-</span><span class="n">x</span> <span class="o">+</span> <span class="o">-</span><span class="n">y</span><span class="p">)))</span>              <span class="c1">#  +225</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="o">+</span><span class="mi">90</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span>     <span class="o">-</span><span class="n">y</span><span class="p">)))</span>              <span class="c1">#  +270</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="o">+</span><span class="mi">45</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span><span class="o">-</span><span class="n">x</span> <span class="o">+</span> <span class="o">-</span><span class="n">y</span><span class="p">)))</span>              <span class="c1">#  +315</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span>  <span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">x</span><span class="p">)))</span>                   <span class="c1">#  +360</span>
+
+  <span class="n">p2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span> <span class="n">p4</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>                                            <span class="c1"># Original tests</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">y</span>      <span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">y</span><span class="p">),</span>     <span class="n">p2</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">y</span>      <span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span> <span class="n">p2</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">y</span>      <span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">x</span><span class="p">),</span>      <span class="mi">0</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">y</span>      <span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">),</span>      <span class="mi">0</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">x</span><span class="p">),</span>     <span class="n">p4</span><span class="p">))</span>
+  <span class="k">assert</span><span class="p">(</span><span class="n">n</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">fromNormalLineFindSmallestAngleTo</span><span class="p">(</span> <span class="n">x</span><span class="p">),</span>     <span class="n">p4</span><span class="p">))</span>
+
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unit tests successful&quot;</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

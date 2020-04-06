@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test1a-LFS-midplane.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test1a-LFS-midplane.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Created on Sun Oct 20 18:28:22 2019</p>
+<p>@author: Daniel.Ibanez</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sol_heat_flux.eich</span> <span class="kn">import</span> <span class="n">Eich</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">footprint</span> <span class="o">=</span> <span class="n">Eich</span><span class="p">(</span><span class="mf">2.5e-3</span><span class="p">,</span> <span class="mf">0.5e-3</span><span class="p">,</span> <span class="n">r0_lfs</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">r0_hfs</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>  <span class="c1"># lambda_q=2.5, S=0.5</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="o">*</span><span class="mf">1e-3</span>
+<span class="n">footprint</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">footprint</span><span class="o">.</span><span class="n">s_disconnected_dn_max</span> <span class="o">=</span> <span class="mf">2.1e-3</span>
+<span class="n">footprint</span><span class="o">.</span><span class="n">f_x_in_out</span> <span class="o">=</span> <span class="mf">5.</span>
+<span class="n">q_0</span> <span class="o">=</span> <span class="mf">1e6</span>
+
+<span class="n">footprint</span><span class="o">.</span><span class="n">calculate_heat_flux_density</span><span class="p">(</span><span class="s2">&quot;lfs-mp&quot;</span><span class="p">)</span>
+<span class="n">footprint</span><span class="o">.</span><span class="n">plot_heat_power_density</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">q_0</span><span class="o">*</span><span class="n">footprint</span><span class="o">.</span><span class="n">calculate_heat_power</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">footprint</span><span class="o">.</span><span class="n">r0_lfs</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

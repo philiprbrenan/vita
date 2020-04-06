@@ -11,8 +11,8 @@ import sys
 
 
 class HeatLoad():
-    '''
-    Base function for storing heat flux profiles.
+    """
+    =Base function for storing heat flux profiles=
 
     Member functions:
         __call__(s) : integrate the heat-flux over s
@@ -24,7 +24,7 @@ class HeatLoad():
         get_global_coordinates()
         calculate_heat_power()
         plot_heat_power_density()
-    '''
+    """
     def __init__(self, r0_lfs=0., r0_hfs=0.):
         self.f_x = 1.  # edge radius at outboard equatorial midplane
         self.f_x_in_out = 1.  # edge radius at outboard equatorial midplane
@@ -49,7 +49,7 @@ class HeatLoad():
         return self._interp_func(s)
 
     def calculate_heat_flux_density(self):
-        '''
+        """
         Function for calculating the heat flux profile. Needs to be implemented
         by the inhering class.
 
@@ -61,11 +61,11 @@ class HeatLoad():
         -------
         None.
 
-        '''
+        """
         raise NotImplementedError("The inheriting class must implement this virtual function.")
 
     def set_coordinates(self, s_in):
-        '''
+        """
         Function for setting the local coordinates.
 
         Parameters
@@ -77,14 +77,14 @@ class HeatLoad():
         -------
         None.
 
-        '''
+        """
         if self.model_type == "Eich":
             self._s = s_in
         else:
             print("Warning: The HeatFlux model in use does not allow setting coordinates")
 
     def set_edge_radius(self, radius_in):
-        '''
+        """
         Function for setting the position of the high field side LCFS
 
         Parameters
@@ -96,11 +96,11 @@ class HeatLoad():
         -------
         None.
 
-        '''
+        """
         self.r0_hfs = radius_in
 
     def get_local_coordinates(self):
-        '''
+        """
         Function for getting the local coordinates
 
         Returns
@@ -108,11 +108,11 @@ class HeatLoad():
         _s : list or 1-by-n numpy array
             An array with the local coordinates.
 
-        '''
+        """
         return self._s
 
     def get_global_coordinates(self, location='lfs'):
-        '''
+        """
         Function for getting the global coordinates, i.e. the local coordinates
         plus the position of the LCFS for the LFS and the position of the LCFS
         minus the local position on the HFS
@@ -122,7 +122,7 @@ class HeatLoad():
         _s_global : list or 1-by-n numpy array
             An array with the global coordinates.
 
-        '''
+        """
         if location == 'lfs':
             _s_global = self._s + self.r0_lfs
         elif location == 'hfs':
@@ -132,7 +132,7 @@ class HeatLoad():
         return _s_global
 
     def calculate_heat_power(self):
-        '''
+        """
         Function for calculating the integral of the power profile as a function
         of s
 
@@ -143,19 +143,19 @@ class HeatLoad():
         heat_power : float
             The integral of the heat flux profile with respect to s
 
-        '''
+        """
         self._total_power = integrate.simps(self._q, self._s)
         return self._total_power
 
     def plot_heat_power_density(self):
-        '''
+        """
         Function for plotting the heat flux profile
 
         Returns
         -------
         None.
 
-        '''
+        """
         plt.plot(self._s, self._q)
         plt.xlabel('$s$')
         plt.ylabel('$q(s)$')

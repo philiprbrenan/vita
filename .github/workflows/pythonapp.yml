@@ -18,7 +18,7 @@ jobs:
         sudo apt install -qq python-configobj tree
         mkdir -p out
         tree
-        python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib
+        python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib cherab
 
     - name: Run
       run: |
